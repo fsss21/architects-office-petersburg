@@ -1,0 +1,283 @@
+.biography {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px 20px;
+  color: #fff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.biographyTopNavigation {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 10;
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.biographyTopBtn {
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.biographyTopBtnBack {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.biographyTopBtnBack:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+.biographyContent {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  gap: 30px;
+  align-items: stretch;
+  flex: 1;
+  overflow: hidden;
+  padding-top: 60px;
+  height: calc(100vh - 120px);
+}
+
+.biographyLeftPanel {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.biographyLeftPanel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.biographyLeftPanel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.biographyLeftPanel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.biographyLeftPanel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.biographyRightPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.biographyButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-start;
+}
+
+.biographyBtn {
+  padding: 15px 20px;
+  font-size: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  width: 100%;
+}
+
+.biographyBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.biographyBtnArchitect {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.biographyBtnArchitectActive {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.biographyBtnPrinciples {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+  margin-top: 10px;
+}
+
+.biographyBtnPrinciples:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.biographyRightPanel {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.biographyRightPanel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.biographyRightPanel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.biographyRightPanel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.biographyRightPanel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.biographyPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.biographyInfo {
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.biographyName {
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.biographyTitleBlock {
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.biographyTitle {
+  position: absolute;
+  top: 20px;
+  right: 32%;
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.biographyText {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.biographyText p {
+  margin-bottom: 12px;
+}
+
+.biographyText p:last-child {
+  margin-bottom: 0;
+}
+
+.biographyGallery {
+  margin-top: 20px;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 400px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 1200px) {
+  .biographyContent {
+    gap: 20px;
+  }
+
+  .biographyLeftPanel {
+    flex: 0 0 280px;
+  }
+}
+
+@media (max-width: 968px) {
+  .biographyContent {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .biographyLeftPanel {
+    flex: none;
+    position: static;
+  }
+
+  .biographyRightPanel {
+    flex: none;
+  }
+
+  .biographyButtons {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .biographyBtn {
+    flex: 1;
+    min-width: 150px;
+  }
+}
+

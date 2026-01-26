@@ -1,73 +1,66 @@
 import { useState, useEffect } from 'react'
 import styles from './VideoPreview.module.css'
+import mainPageImg from '../../assets/main_page_img.jpg'
+import mainPageImg4k from '../../assets/main_page_img-4k.jpg'
 
 function VideoPreview({ onComplete }) {
-  const [showVideo, setShowVideo] = useState(true)
-  const [videoError, setVideoError] = useState(false)
+  const [showPreview, setShowPreview] = useState(true)
+  const [imageError, setImageError] = useState(false)
+  const [imageSrc, setImageSrc] = useState(mainPageImg)
 
-  const handleVideoEnd = () => {
-    setShowVideo(false)
-    if (onComplete) {
-      onComplete()
-    }
-  }
+  useEffect(() => {
+    // Определяем, нужно ли использовать 4K изображение
+    // Для экранов с шириной >= 2560px или высотой >= 1440px используем 4K версию
+    const is4K = window.innerWidth >= 2560 || window.innerHeight >= 1440
+    setImageSrc(is4K ? mainPageImg4k : mainPageImg)
+  }, [])
 
-  const handleVideoError = () => {
-    setVideoError(true)
-    // Если видео не загрузилось, автоматически пропускаем заставку через 2 секунды
+  const handleImageError = () => {
+    setImageError(true)
+    // Если изображение не загрузилось, автоматически пропускаем заставку через 1 секунду
     setTimeout(() => {
-      setShowVideo(false)
+      setShowPreview(false)
       if (onComplete) {
         onComplete()
       }
-    }, 2000)
+    }, 1000)
   }
 
   const handleSkip = () => {
-    setShowVideo(false)
+    setShowPreview(false)
     if (onComplete) {
       onComplete()
     }
   }
 
-  useEffect(() => {
-    // Автоматически пропускаем видео через 10 секунд, если оно не закончилось
-    const timer = setTimeout(() => {
-      if (showVideo) {
-        setShowVideo(false)
-        if (onComplete) {
-          onComplete()
-        }
-      }
-    }, 10000)
+  const handleClick = () => {
+    // Пропуск заставки по клику
+    setShowPreview(false)
+    if (onComplete) {
+      onComplete()
+    }
+  }
 
-    return () => clearTimeout(timer)
-  }, [showVideo, onComplete])
-
-  if (!showVideo) return null
+  if (!showPreview) return null
 
   return (
-    <div className={styles.videoPreview}>
-      {videoError && (
+    <div className={styles.videoPreview} onClick={handleClick}>
+      {imageError && (
         <div className={styles.videoPreviewError}>
-          <p>Видео не найдено</p>
+          <p>Изображение не найдено</p>
           <button onClick={handleSkip} className={styles.videoPreviewSkip}>
             Пропустить
           </button>
         </div>
       )}
-      <video
-        className={styles.videoPreviewVideo}
-        autoPlay
-        muted
-        onEnded={handleVideoEnd}
-        onError={handleVideoError}
-        playsInline
-      >
-        <source src="/preview.mp4" type="video/mp4" />
-        Ваш браузер не поддерживает видео.
-      </video>
-      
+      {!imageError && (
+        <img
+          src={imageSrc}
+          alt="Заставка"
+          className={styles.videoPreviewImage}
+          onError={handleImageError}
+        />
+      )}
     </div>
   )
 }

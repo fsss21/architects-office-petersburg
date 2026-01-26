@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PhotoGallery from '../../components/PhotoGallery/PhotoGallery'
+import Header from '../../components/Header/Header'
 import styles from './Principles.module.css'
 
 function Principles() {
@@ -17,7 +18,7 @@ function Principles() {
   }, [])
 
   const handleBack = () => {
-    navigate('/biography')
+    navigate('/home')
   }
 
   const handleNextPalladian = () => {
@@ -53,6 +54,7 @@ function Principles() {
 
   return (
     <div className={styles.principles}>
+      <Header />
       <div className={styles.principlesContent}>
         <div className={styles.principlesColumns}>
           {/* Левая колонка - Палладианские принципы */}

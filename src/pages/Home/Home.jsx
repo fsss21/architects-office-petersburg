@@ -1,119 +1,118 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import ProgressLine from '../../components/ProgressLine/ProgressLine'
 import PhotoGallery from '../../components/PhotoGallery/PhotoGallery'
+import Header from '../../components/Header/Header'
 import styles from './Home.module.css'
 
 function Home() {
   const navigate = useNavigate()
-  const [selectedPoint, setSelectedPoint] = useState(0)
-  const [progressPoints, setProgressPoints] = useState([])
-  const [homePhotos, setHomePhotos] = useState([])
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0)
+  const [selectedArchitect, setSelectedArchitect] = useState(null)
+  const [showFullscreen, setShowFullscreen] = useState(false)
+  const [architects, setArchitects] = useState([])
 
   useEffect(() => {
-    fetch('/data/progressPoints.json')
+    fetch('/data/architects.json')
       .then(res => res.json())
-      .then(data => setProgressPoints(data))
-      .catch(err => console.error('Error loading progress points:', err))
-
-    fetch('/data/homePhotos.json')
-      .then(res => res.json())
-      .then(data => setHomePhotos(data))
-      .catch(err => console.error('Error loading photos:', err))
+      .then(data => {
+        setArchitects(data)
+        // Автоматически выбираем первого архитектора по умолчанию
+        if (data.length > 0) {
+          setSelectedArchitect(data[0])
+        }
+      })
+      .catch(err => console.error('Error loading architects:', err))
   }, [])
 
-  const handlePointClick = (index) => {
-    setSelectedPoint(index)
+  const handleArchitectClick = (architect) => {
+    setSelectedArchitect(architect)
   }
 
   const handleBack = () => {
-    // Логика кнопки "Назад"
-    console.log('Назад')
+    navigate('/')
   }
 
-  const handleMainMenu = () => {
-    navigate('/biography')
+  const handlePrinciples = () => {
+    navigate('/principles')
   }
 
-  const handleNextPhoto = () => {
-    setCurrentPhotoIndex((prev) => (prev + 1) % homePhotos.length)
+  const handlePhotoClick = () => {
+    if (selectedArchitect) {
+      setShowFullscreen(true)
+    }
   }
 
-  const handlePrevPhoto = () => {
-    setCurrentPhotoIndex((prev) => (prev - 1 + homePhotos.length) % homePhotos.length)
+  const handleCloseFullscreen = () => {
+    setShowFullscreen(false)
   }
-
-  const currentPoint = progressPoints[selectedPoint]
 
   return (
     <div className={styles.home}>
+      <Header />
       <div className={styles.homeContent}>
-        {/* Прогресс линия */}
-        <ProgressLine points={progressPoints} onPointClick={handlePointClick} />
-        {/* Основной контент: текст слева, галерея справа */}
-        <div className={styles.homeMainContent}>
-          <div className={styles.homeMainContentMenu}>
-            <div className={styles.homeTextBlock}>
-              <h2>О проекте</h2>
-              <p>
-                Это уникальная коллекция работ выдающихся архитекторов, которые
-                изменили облик городов и повлияли на развитие архитектуры во всем мире.
-              </p>
-              {currentPoint && (
-                <p 
-                  className={styles.homeTextPoint}
-                  dangerouslySetInnerHTML={{ __html: `<strong>${currentPoint.label}</strong>` }}
-                />
-              )}
-            </div>
-            {/* Кнопки навигации внизу страницы */}
-            <div className={styles.homeBottomNavigation}>
-              <button className={`${styles.homeBtn} ${styles.homeBtnBack}`} onClick={handleBack}>
-                Назад
+        <div className={styles.homeLeftPanel}>
+          <div className={styles.homeButtons}>
+            {/* 3 кнопки архитекторов */}
+            {architects.map((architect) => (
+              <button
+                key={architect.id}
+                className={`${styles.homeBtn} ${styles.homeBtnArchitect} ${
+                  selectedArchitect?.id === architect.id ? styles.homeBtnArchitectActive : ''
+                }`}
+                onClick={() => handleArchitectClick(architect)}
+              >
+                {architect.name}
               </button>
-              <button className={`${styles.homeBtn} ${styles.homeBtnMainMenu}`} onClick={handleMainMenu}>
-                Главное меню
-              </button>
-            </div>
-          </div>
+            ))}
 
-          <div className={styles.homeGalleryBlock}>
-            <div className={styles.homeGalleryWrapper}>
-              <PhotoGallery 
-                photos={homePhotos} 
-                showControls={false} 
-                showArrows={false}
-                currentIndex={currentPhotoIndex}
-                onIndexChange={setCurrentPhotoIndex}
-              />
-            </div>
-            {homePhotos.length > 0 && (
-              <div className={styles.homeGalleryControls}>
-                <button 
-                  className={styles.homeGalleryNavBtn}
-                  onClick={handlePrevPhoto}
-                  disabled={homePhotos.length <= 1}
-                >
-                  ←
-                </button>
-                <span className={styles.homeGalleryCounter}>
-                  {currentPhotoIndex + 1} / {homePhotos.length}
-                </span>
-                <button 
-                  className={styles.homeGalleryNavBtn}
-                  onClick={handleNextPhoto}
-                  disabled={homePhotos.length <= 1}
-                >
-                  →
-                </button>
-              </div>
-            )}
+            {/* Кнопка архитектурных принципов */}
+            
+        <div className={styles.homeTopNavigation}>
+        <button
+              className={`${styles.homeBtn} ${styles.homeBtnPrinciples}`}
+              onClick={handlePrinciples}
+            >
+              Архитектурные принципы и сравнения
+            </button>
+        <button className={`${styles.homeTopBtn} ${styles.homeTopBtnBack}`} onClick={handleBack}>
+          Назад
+        </button>
+        
+      </div>
           </div>
         </div>
+        <div className={styles.homeTitleBlock}>
+          <h3 className={styles.homeTitle}>БИОГРАФИЯ АРХИТЕКТОРА</h3>
+          </div>
+        <div className={styles.homeRightPanel}>
+          
+          {selectedArchitect ? (
+            <>
+              <div className={styles.homeInfo}>
+                <h2 className={styles.homeName}>{selectedArchitect.name}</h2>
+              </div>
+              
+              <div 
+                className={styles.homeText}
+                dangerouslySetInnerHTML={{ __html: `<p>${selectedArchitect.biography}</p>` }}
+              />
+              <div className={styles.homeGallery}>
+                <PhotoGallery
+                  photos={selectedArchitect.photos}
+                  showFullscreen={showFullscreen}
+                  onCloseFullscreen={handleCloseFullscreen}
+                  onImageClick={handlePhotoClick}
+                  showControls={false}
+                  showArrows={true}
+                />
+              </div>
+            </>
+          ) : (
+            <div className={styles.homePlaceholder}>
+              <p>Выберите архитектора, чтобы просмотреть его биографию и работы</p>
+            </div>
+          )}
+        </div>
       </div>
-      
-      
     </div>
   )
 }

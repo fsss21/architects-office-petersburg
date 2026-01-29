@@ -1,3 +1,16 @@
+@font-face {
+  font-family: 'Anticva';
+  src: url('https://cdn.jsdelivr.net/gh/KonstatinKrastev/Anticva-Font@main/fonts/Anticva-Regular.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/KonstatinKrastev/Anticva-Font@main/fonts/Anticva-Regular.woff') format('woff'),
+       url('https://cdn.jsdelivr.net/gh/KonstatinKrastev/Anticva-Font@main/fonts/Anticva-Regular.ttf') format('truetype'),
+       url('/fonts/Anticva-Regular.woff2') format('woff2'),
+       url('/fonts/Anticva-Regular.woff') format('woff'),
+       url('/fonts/Anticva-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -40,26 +53,8 @@ a {
   font-weight: 500;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
 
-button:hover {
-  border-color: #646cff;
-}
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
 
 @media (prefers-color-scheme: dark) {
   :root {

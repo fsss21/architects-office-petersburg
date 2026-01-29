@@ -1,19 +1,31 @@
 .subMenu {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 40px 20px;
-  padding-top: 100px;
-  color: #fff;
   position: relative;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  padding: 40px 20px;
+  padding-top: 100px;
+  color: #fff;
+  overflow: hidden;
+}
+
+.subMenuBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center 20%;
+  background-repeat: no-repeat;
+  z-index: 0;
 }
 
 .subMenuContent {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding-top: 60px;
+  padding-top: 40px;
   flex: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .subMenuCenterText {
@@ -21,6 +33,7 @@
   margin-bottom: 60px;
   padding: 0 20px;
 }
+
 
 .subMenuCenterText h1 {
   font-size: 2.5rem;
@@ -34,68 +47,159 @@
   opacity: 0.9;
 }
 
+/* Стили для страницы С фото */
 .subMenuMainContent {
   display: flex;
-  gap: 40px;
+  justify-content: space-evenly;
   align-items: stretch;
+  margin-top: 20px;
   height: calc(100vh - 300px);
   min-height: 500px;
-}
-.subMenuMainContentMenu {
-  display: flex;
-  padding: 40px;
+  width: 100%;
 }
 
+/* Стили для страницы БЕЗ фото */
+.subMenuMainContentCentered {
+  justify-content: center;
+  align-items: center;
+}
+
+.subMenuMainContentMenu {
+  display: flex;
+  max-width: 700px;
+  padding: 20px;
+}
+
+/* Стили для страницы БЕЗ фото */
+.subMenuMainContentCentered .subMenuMainContentMenu {
+  max-width: 100%;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Стили для страницы С фото */
 .subMenuTextBlock {
   position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
   padding: 30px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+/* Стили для страницы БЕЗ фото */
+.subMenuTextBlockCentered {
+  align-items: center;
+  text-align: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 0;
+  max-width: 800px;
+  width: 100%;
+  min-height: 650px;
+}
+
+/* Стили для страницы С фото */
 .subMenuBottomNavigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   position: absolute;
+  width: 100%;
+  max-width: 600px;
   bottom: 2%;
+}
+
+/* Стили для страницы БЕЗ фото */
+.subMenuTextBlockCentered .subMenuBottomNavigation {
+  position: relative;
+  bottom: auto;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 20px;
+}
+
+* button{
+  font-family: 'Anticva', serif;
+}
+
+.controlsNavMenu{
   display: flex;
   gap: 15px;
-  padding: 20px 0;
-  margin-top: auto;
 }
 
 .subMenuTextBlock h2 {
   font-size: 1.8rem;
   margin-bottom: 20px;
-  color: #fff;
+  color: #291600;
+  font-family: 'Anticva', serif;
 }
 
 .subMenuTextBlock p {
-  font-size: 1rem;
+  font-size: 20px;
   line-height: 1.6;
-  margin-bottom: 15px;
-  color: rgba(255, 255, 255, 0.9);
+  color: #221102;
+  font-family: 'Raleway-v4020', serif;
 }
 
 .subMenuTextBlock p:last-child {
   margin-bottom: 0;
 }
 
-.subMenuTextPoint {
-  min-height: 50px;
+.subMenuTextNavigation {
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 20px;
 }
 
+.subMenuTextNavBtn {
+  background: none;
+  color: #826748;
+  border: 2px solid #826748;
+  border-radius: 2px;
+  width: 45px;
+  height: 45px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.subMenuTextNavBtn:hover:not(:disabled) {
+  transform: scale(1.1);
+}
+
+.subMenuTextNavBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.subMenuTextCounter {
+  font-size: 16px;
+  color: #fff;
+  font-weight: 500;
+  min-width: 80px;
+  text-align: center;
+}
+
+.subMenuTextPoint {
+  text-transform: uppercase;
+}
+
+/* Стили для страницы С фото */
 .subMenuGalleryBlock {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  max-width: 900px;
 }
 
 .subMenuGalleryWrapper {
@@ -112,27 +216,44 @@
   max-height: 500px;
 }
 
-.subMenuGalleryControls {
+.subMenuGalleryControls{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 800px;
+}
+
+.subMenuNav {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
-  margin-top: 20px;
+}
+
+.fullscreenButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 45px;
+  background: none;
+  border: none;
+  color: #BFA282;
+  cursor: pointer;
 }
 
 .subMenuGalleryNavBtn {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  font-size: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #BFA282;
+  border-radius: 50%;
+  border: 1px solid #BFA282;
+  background: none;
+  width: 45px;
+  height: 45px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .subMenuGalleryNavBtn:hover:not(:disabled) {
@@ -147,10 +268,11 @@
 
 .subMenuGalleryCounter {
   font-size: 16px;
-  color: #fff;
+  color: #BFA282;
   font-weight: 500;
   min-width: 80px;
   text-align: center;
+  font-family: 'Raleway-v4020', serif;
 }
 
 .subMenuBtn {
@@ -166,26 +288,25 @@
 }
 
 .subMenuBtnBack {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: none;
+  color: #826748;
+  border: 2px solid #826748;
+  border-radius: 2px;
 }
 
 .subMenuBtnBack:hover {
-  background: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .subMenuBtnMainMenu {
-  background: #fff;
-  color: #667eea;
+  background: none;
+  color: #826748;
+  border: 2px solid #826748;
+  border-radius: 2px;
 }
 
 .subMenuBtnMainMenu:hover {
-  background: #f0f0f0;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width: 968px) {

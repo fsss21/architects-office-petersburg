@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import { CatalogFilterProvider } from './context/CatalogFilterContext'
 import VideoPreview from './components/VideoPreview/VideoPreview'
 import MainMenu from './pages/MainMenu/MainMenu'
 import SubMenu from './pages/SubMenu/SubMenu'
-import Principles from './pages/Principles/Principles'
-import Home from './pages/Home/Home'
+import Catalog from './pages/Catalog/Catalog'
+import CatalogItem from './pages/CatalogItem/CatalogItem'
 
 function AppContent() {
   const navigate = useNavigate()
@@ -24,15 +25,15 @@ function AppContent() {
   }
 
   return (
-    <>
+    <CatalogFilterProvider>
       {showVideo && <VideoPreview onComplete={handleVideoComplete} />}
       <Routes>
         <Route path="/" element={<MainMenu />} />
         <Route path="/submenu" element={<SubMenu />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/principles" element={<Principles />} />
+        <Route path="/catalog" element={<Catalog />} />
+        <Route path="/catalog/:id" element={<CatalogItem />} />
       </Routes>
-    </>
+    </CatalogFilterProvider>
   )
 }
 

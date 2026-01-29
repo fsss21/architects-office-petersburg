@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import styles from './PhotoGallery.module.css'
 
 function PhotoGallery({ photos = [], showFullscreen = false, onCloseFullscreen, onImageClick, showControls = false, showArrows = false, currentIndex: externalIndex, onIndexChange }) {
@@ -13,7 +14,12 @@ function PhotoGallery({ photos = [], showFullscreen = false, onCloseFullscreen, 
         }
       }
       document.addEventListener('keydown', handleEscape)
-      return () => document.removeEventListener('keydown', handleEscape)
+      // Блокируем скролл страницы при полноэкранном режиме
+      document.body.style.overflow = 'hidden'
+      return () => {
+        document.removeEventListener('keydown', handleEscape)
+        document.body.style.overflow = 'unset'
+      }
     }
   }, [showFullscreen, onCloseFullscreen])
 
@@ -53,13 +59,80 @@ function PhotoGallery({ photos = [], showFullscreen = false, onCloseFullscreen, 
 
   const currentPhoto = photos[currentIndex]
 
-  return (
-    <div className={`${styles.photoGallery} ${showFullscreen ? styles.photoGalleryFullscreen : ''}`}>
-      {showFullscreen && (
-        <button className={styles.photoGalleryClose} onClick={onCloseFullscreen}>
+  const handleBackdropClick = (e) => {
+    // Закрываем только если клик был по фону, а не по контейнеру с изображением
+    if (e.target === e.currentTarget && onCloseFullscreen) {
+      onCloseFullscreen()
+    }
+  }
+
+  const handleCloseClick = (e) => {
+    e.stopPropagation()
+    if (onCloseFullscreen) {
+      onCloseFullscreen()
+    }
+  }
+
+  const handleContainerClick = (e) => {
+    // Предотвращаем закрытие при клике на контейнер с изображением
+    e.stopPropagation()
+  }
+
+  // Полноэкранный режим — рендерим в body через Portal, чтобы z-index был выше header
+  if (showFullscreen) {
+    const fullscreenContent = (
+      <div 
+        className={styles.photoGalleryFullscreen}
+        onClick={handleBackdropClick}
+      >
+        <button 
+          className={styles.photoGalleryClose} 
+          onClick={handleCloseClick}
+          aria-label="Закрыть полноэкранный режим"
+          type="button"
+        >
           ✕
         </button>
-      )}
+        <div 
+          className={styles.photoGalleryContainer}
+          onClick={handleContainerClick}
+        >
+          {showArrows && (
+            <button
+              className={`${styles.photoGalleryArrow} ${styles.photoGalleryArrowLeft}`}
+              onClick={prevPhoto}
+              aria-label="Предыдущее фото"
+              type="button"
+            >
+              ‹
+            </button>
+          )}
+          <div className={styles.photoGalleryImageWrapper}>
+            <img
+              src={currentPhoto}
+              alt={`Фото ${currentIndex + 1}`}
+              className={styles.photoGalleryImage}
+            />
+          </div>
+          {showArrows && (
+            <button
+              className={`${styles.photoGalleryArrow} ${styles.photoGalleryArrowRight}`}
+              onClick={nextPhoto}
+              aria-label="Следующее фото"
+              type="button"
+            >
+              ›
+            </button>
+          )}
+        </div>
+      </div>
+    )
+    return createPortal(fullscreenContent, document.body)
+  }
+
+  // Обычный режим
+  return (
+    <div className={styles.photoGallery}>
       <div className={styles.photoGalleryContainer}>
         {showArrows && (
           <button
@@ -88,7 +161,7 @@ function PhotoGallery({ photos = [], showFullscreen = false, onCloseFullscreen, 
           </button>
         )}
       </div>
-      {showControls && !showFullscreen && (
+      {showControls && (
         <div className={styles.photoGalleryControls}>
           <button
             className={styles.photoGalleryNavBtn}
@@ -114,4 +187,3 @@ function PhotoGallery({ photos = [], showFullscreen = false, onCloseFullscreen, 
 }
 
 export default PhotoGallery
-

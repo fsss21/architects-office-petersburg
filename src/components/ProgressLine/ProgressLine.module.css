@@ -13,7 +13,8 @@
   align-items: center;
   position: relative;
   width: 100%;
-  margin: 0;
+  max-width: 1800px;
+  margin: 0 auto;
   padding: 0;
 }
 
@@ -24,7 +25,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: rgba(255, 255, 255, 0.3);
+  background: #8E7A63;
   z-index: 1;
   transform: translateY(-50%);
 }
@@ -43,40 +44,47 @@
   height: 100px;
 }
 
+.progressLinePointActive {
+  transition: all 0.3s ease;
+}
+
 .progressLineLabel {
   position: absolute;
-  top: -50px;
+  top: -60px;
   left: 50%;
   max-width: 400px;
   min-height: 40px;
   background: transparent;
-  color: #fff;
+  color: #BFA282;
   padding: 8px 12px;
   border-radius: 4px;
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: 17px;
+  text-transform: uppercase;
   text-align: center;
   opacity: 1;
   transform: translateX(-50%);
   transition: all 0.3s ease;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
   word-wrap: break-word;
   white-space: normal;
   width: max-content;
+  font-family: 'Anticva', serif;
+  border: 1px solid transparent;
 }
 
 .progressLinePointActive .progressLineLabel {
-  font-weight: 600;
+  border: 1px solid #BFA282;
+  background: rgb(191, 162, 130, 20%);
+  transition: all 0.3s ease;
 }
 
 .progressLineDot {
-  width: 20px;
-  height: 20px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
-  border: 3px solid #fff;
+  background: #8E7A63;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   position: absolute;
   top: 50px;
   left: 50%;
@@ -85,10 +93,9 @@
 }
 
 .progressLinePointActive .progressLineDot {
-  width: 35px;
-  height: 35px;
-  background: #4a90e2;
-  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.5);
+  width: 22px;
+  height: 22px;
+  background: #BFA282;
   transform: translate(-50%, -50%);
 }
 

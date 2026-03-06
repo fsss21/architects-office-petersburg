@@ -6,10 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:server": "pkg server.cjs --output build/launch --targets node18-win-x64,node18-macos-x64 --assets build",
-    "build:server:win": "pkg server.cjs --output build/launch --targets node18-win-x64 --assets build",
-    "build:server:mac": "pkg server.cjs --output build/launch --targets node18-macos-x64 --assets build",
-    "build:all": "npm run build && npm run build:server",
+    "server": "node src/server/index.js",
+    "build:server:win": "node -e \"try { require('fs').unlinkSync('build/launch.exe'); } catch (e) {}\" && pkg src/server/index.js --targets node18-win-x64 --output build/launch.exe --config package.json",
+    "build:server:mac": "node -e \"try { require('fs').unlinkSync('build/server'); } catch (e) {}\" && pkg src/server/index.js --targets node18-macos-x64 --output build/server --config package.json",
     "build:win": "npm run build && npm run build:server:win",
     "build:mac": "npm run build && npm run build:server:mac",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
@@ -20,10 +19,12 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.7",
     "@mui/material": "^7.3.7",
-    "express": "^4.18.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.20.0"
+    "react-router-dom": "^6.20.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "fs-extra": "^11.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
@@ -36,14 +37,11 @@
   },
   "pkg": {
     "scripts": [
-      "server.cjs"
+      "src/server/index.js",
+      "src/server/utils/serverSetup.js"
     ],
     "assets": [
       "build/**/*"
-    ],
-    "targets": [
-      "node18-win-x64",
-      "node18-macos-x64"
     ],
     "outputPath": "build"
   }

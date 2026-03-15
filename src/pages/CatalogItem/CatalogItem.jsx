@@ -5,10 +5,6 @@ import Header from '../../components/Header/Header'
 import styles from './CatalogItem.module.css'
 import catalogItemImg from '../../assets/catalog_item_img.png'
 import catalogItemImg4k from '../../assets/catalog_item_img-4k.png'
-import petrImg from '../../assets/petr_img.png'
-import columnAlexImg from '../../assets/column_alex_img.png'
-import suvorovImg from '../../assets/suvorov_img.png'
-import barklayImg from '../../assets/barklay_img.png'
 
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
@@ -24,14 +20,6 @@ function CatalogItem() {
   const [currentTextIndex, setCurrentTextIndex] = useState(0)
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0)
   const [imageSrc, setImageSrc] = useState(catalogItemImg)
-
-  // Маппинг изображений по названиям памятников
-  const monumentImages = {
-    'Медный всадник': petrImg,
-    'Александровская колонна': columnAlexImg,
-    'Памятник Суворову': suvorovImg,
-    'Памятник Барклаю де Толли': barklayImg
-  }
 
   useEffect(() => {
     // Определяем, нужно ли использовать 4K изображение
@@ -100,13 +88,7 @@ function CatalogItem() {
     }
   }
 
-  // Получаем изображения для текущего предмета
-  const getItemImages = () => {
-    if (item && monumentImages[item.name]) {
-      return [monumentImages[item.name]]
-    }
-    return item?.photos || []
-  }
+  const getItemImages = () => item?.photos || []
 
   if (loading) {
     return (
@@ -160,6 +142,13 @@ function CatalogItem() {
               <div className={styles.catalogItemInfoRow}>
                 <span className={styles.catalogItemInfoLabel}>Время создания:</span>
                 <span className={styles.catalogItemInfoValue}>{item.creationTime}</span>
+              </div>
+            )}
+
+            {item.material && (
+              <div className={styles.catalogItemInfoRow}>
+                <span className={styles.catalogItemInfoLabel}>Материал:</span>
+                <span className={styles.catalogItemInfoValue}>{item.material}</span>
               </div>
             )}
             

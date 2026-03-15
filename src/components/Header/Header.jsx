@@ -8,19 +8,21 @@ import SearchIcon from '@mui/icons-material/Search'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 
-const ERA_OPTIONS = ['XVIII век', 'XIX век', 'Эпоха классицизма']
-const MATERIAL_OPTIONS = ['Бронза', 'Гранит', 'Мрамор', 'Камень']
+const ERA_OPTIONS = ['XVIII век', 'XIX век', 'XX век', 'Эпоха классицизма']
 
 const getErasFromCreationTime = (creationTime) => {
   if (!creationTime) return []
-  const match = String(creationTime).match(/\d{4}/)
-  const year = match ? parseInt(match[0], 10) : null
-  if (year === null) return []
+  const str = String(creationTime)
+  const matches = str.match(/\d{4}/g)
+  const years = matches ? matches.map((m) => parseInt(m, 10)) : []
   const eras = []
-  if (year < 1800) eras.push('XVIII век')
-  if (year >= 1800 && year < 1900) eras.push('XIX век')
-  if (year >= 1760 && year <= 1840) eras.push('Эпоха классицизма')
-  return eras
+  years.forEach((year) => {
+    if (year < 1800) eras.push('XVIII век')
+    if (year >= 1800 && year < 1900) eras.push('XIX век')
+    if (year >= 1900 && year < 2000) eras.push('XX век')
+    if (year >= 1760 && year <= 1840) eras.push('Эпоха классицизма')
+  })
+  return [...new Set(eras)]
 }
 
 const matchesSearch = (item, query) => {
@@ -30,6 +32,7 @@ const matchesSearch = (item, query) => {
     item.name,
     item.title,
     item.sculptor,
+    item.material,
     item.location,
     item.creationTime,
     ...(Array.isArray(item.texts) ? item.texts : []),
@@ -58,7 +61,14 @@ function Header() {
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [sculptors, setSculptors] = useState([])
+  const [materialOptions, setMaterialOptions] = useState([])
   const [catalogItemsForNav, setCatalogItemsForNav] = useState([])
+
+  // Парсинг материалов из строки (например "Бронза, гранит" или "Гипс тонированный")
+  const parseMaterials = (str) => {
+    if (!str || typeof str !== 'string') return []
+    return str.split(/[,/]+/).map((s) => s.trim()).filter(Boolean)
+  }
 
   useEffect(() => {
     if (isCatalogPage) {
@@ -69,10 +79,12 @@ function Header() {
         })
         .then(data => {
           if (!data) return
-          const unique = [...new Set(data.map(item => item.sculptor).filter(Boolean))]
-          setSculptors(unique)
+          const uniqueSculptors = [...new Set(data.map(item => item.sculptor).filter(Boolean))]
+          setSculptors(uniqueSculptors)
+          const allMaterials = data.flatMap((item) => parseMaterials(item.material))
+          setMaterialOptions([...new Set(allMaterials)].sort())
         })
-        .catch(() => {})
+        .catch(() => { })
     }
   }, [isCatalogPage])
 
@@ -86,7 +98,7 @@ function Header() {
         .then(data => {
           if (data) setCatalogItemsForNav(data)
         })
-        .catch(() => {})
+        .catch(() => { })
     } else {
       setCatalogItemsForNav([])
     }
@@ -101,8 +113,9 @@ function Header() {
         if (!selectedEras.some((era) => itemEras.includes(era))) return false
       }
       if (selectedMaterials.length > 0) {
-        const material = item.material || ''
-        if (!selectedMaterials.includes(material)) return false
+        const itemMats = parseMaterials(item.material)
+        const hasMaterial = selectedMaterials.some((m) => itemMats.includes(m))
+        if (!hasMaterial) return false
       }
       if (!matchesSearch(item, searchQuery)) return false
       return true
@@ -190,7 +203,7 @@ function Header() {
                 disabled={!prevItem}
                 aria-label="Предыдущий предмет"
               >
-                <ArrowBackIosNewIcon fontSize="medium" />
+
               </button>
               <button
                 type="button"
@@ -199,7 +212,7 @@ function Header() {
                 disabled={!nextItem}
                 aria-label="Следующий предмет"
               >
-                <ArrowForwardIosIcon fontSize="medium" />
+
               </button>
             </div>
             <button
@@ -208,7 +221,7 @@ function Header() {
               onClick={handleHeaderCloseItem}
               aria-label="Закрыть, вернуться в каталог"
             >
-              <CloseIcon fontSize="medium" />
+
             </button>
           </div>
         )}
@@ -234,7 +247,7 @@ function Header() {
                       onClick={() => setFiltersOpen(false)}
                       aria-label="Закрыть фильтры"
                     >
-                      <CloseIcon/>
+                      <CloseIcon />
                     </button>
                   </div>
 
@@ -278,7 +291,7 @@ function Header() {
                         </label>
                       ))}
                     </div>
-                    
+
                   </div>
 
                   <div className={styles.headerFilterBlock}>
@@ -289,7 +302,7 @@ function Header() {
                       </button>
                     </div>
                     <div className={styles.headerFilterOptions}>
-                      {MATERIAL_OPTIONS.map(name => (
+                      {materialOptions.map(name => (
                         <label key={name} className={styles.headerFilterCheck}>
                           <input
                             type="checkbox"
@@ -300,7 +313,7 @@ function Header() {
                         </label>
                       ))}
                     </div>
-                    
+
                   </div>
 
                   <button type="button" className={styles.headerShowBtn} onClick={handleShowFilters}>

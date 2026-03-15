@@ -5,10 +5,6 @@ import Header from '../../components/Header/Header'
 import styles from './Catalog.module.css'
 import catalogImg from '../../assets/catalog_img.png'
 import catalogImg4k from '../../assets/catalog_img-4k.png'
-import petrImg from '../../assets/petr_img.png'
-import columnAlexImg from '../../assets/column_alex_img.png'
-import suvorovImg from '../../assets/suvorov_img.png'
-import barklayImg from '../../assets/barklay_img.png'
 
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
@@ -16,14 +12,17 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 // Маппинг года из creationTime в эпохи (по данным catalogItems.json)
 const getErasFromCreationTime = (creationTime) => {
   if (!creationTime) return []
-  const match = String(creationTime).match(/\d{4}/)
-  const year = match ? parseInt(match[0], 10) : null
-  if (year === null) return []
+  const str = String(creationTime)
+  const matches = str.match(/\d{4}/g)
+  const years = matches ? matches.map((m) => parseInt(m, 10)) : []
   const eras = []
-  if (year < 1800) eras.push('XVIII век')
-  if (year >= 1800 && year < 1900) eras.push('XIX век')
-  if (year >= 1760 && year <= 1840) eras.push('Эпоха классицизма')
-  return eras
+  years.forEach((year) => {
+    if (year < 1800) eras.push('XVIII век')
+    if (year >= 1800 && year < 1900) eras.push('XIX век')
+    if (year >= 1900 && year < 2000) eras.push('XX век')
+    if (year >= 1760 && year <= 1840) eras.push('Эпоха классицизма')
+  })
+  return [...new Set(eras)]
 }
 
 const matchesSearch = (item, query) => {
@@ -33,6 +32,7 @@ const matchesSearch = (item, query) => {
     item.name,
     item.title,
     item.sculptor,
+    item.material,
     item.location,
     item.creationTime,
     ...(Array.isArray(item.texts) ? item.texts : []),
@@ -40,20 +40,19 @@ const matchesSearch = (item, query) => {
   return searchIn.toLowerCase().includes(q)
 }
 
+const parseMaterials = (str) => {
+  if (!str || typeof str !== 'string') return []
+  return str.split(/[,/]+/).map((s) => s.trim()).filter(Boolean)
+}
+
+const ITEMS_PER_PAGE = 4
+
 function Catalog() {
   const navigate = useNavigate()
   const { selectedSculptors, selectedEras, selectedMaterials, searchQuery } = useCatalogFilter()
-  const [currentItemIndex, setCurrentItemIndex] = useState(0)
+  const [pageIndex, setPageIndex] = useState(0)
   const [imageSrc, setImageSrc] = useState(catalogImg)
   const [items, setItems] = useState([])
-
-  // Маппинг изображений по названиям памятников
-  const monumentImages = {
-    'Медный всадник': petrImg,
-    'Александровская колонна': columnAlexImg,
-    'Памятник Суворову': suvorovImg,
-    'Памятник Барклаю де Толли': barklayImg
-  }
 
   useEffect(() => {
     // Определяем, нужно ли использовать 4K изображение
@@ -82,27 +81,34 @@ function Catalog() {
         if (!hasEra) return false
       }
       if (selectedMaterials.length > 0) {
-        const material = item.material || ''
-        if (!selectedMaterials.includes(material)) return false
+        const itemMats = parseMaterials(item.material)
+        const hasMaterial = selectedMaterials.some((m) => itemMats.includes(m))
+        if (!hasMaterial) return false
       }
       if (!matchesSearch(item, searchQuery)) return false
       return true
     })
   }, [items, selectedSculptors, selectedEras, selectedMaterials, searchQuery])
 
-  useEffect(() => {
-    setCurrentItemIndex((prev) => Math.min(prev, Math.max(0, filteredItems.length - 1)))
-  }, [filteredItems.length])
+  const totalPages = Math.max(1, Math.ceil(filteredItems.length / ITEMS_PER_PAGE))
+  const visibleItems = useMemo(() => {
+    const start = pageIndex * ITEMS_PER_PAGE
+    return filteredItems.slice(start, start + ITEMS_PER_PAGE)
+  }, [filteredItems, pageIndex])
 
-  const handleNextItem = () => {
-    if (filteredItems.length > 0 && currentItemIndex < filteredItems.length - 1) {
-      setCurrentItemIndex((prev) => prev + 1)
+  useEffect(() => {
+    setPageIndex((prev) => Math.min(prev, totalPages - 1))
+  }, [filteredItems.length, totalPages])
+
+  const handleNextPage = () => {
+    if (pageIndex < totalPages - 1) {
+      setPageIndex((prev) => prev + 1)
     }
   }
 
-  const handlePrevItem = () => {
-    if (currentItemIndex > 0) {
-      setCurrentItemIndex((prev) => prev - 1)
+  const handlePrevPage = () => {
+    if (pageIndex > 0) {
+      setPageIndex((prev) => prev - 1)
     }
   }
 
@@ -117,7 +123,7 @@ function Catalog() {
 
   return (
     <div className={styles.catalog}>
-      <div 
+      <div
         className={styles.catalogBackground}
         style={{ backgroundImage: `url(${imageSrc})` }}
       />
@@ -129,83 +135,67 @@ function Catalog() {
             {filteredItems.length === 0 ? (
               <p className={styles.catalogEmpty}>По вашему запросу ничего не найдено. Измените фильтры или поиск.</p>
             ) : (
-            filteredItems.map((item, index) => {
-              // Определяем класс позиционирования блока в зависимости от id
-              let blockPositionClass = ''
-              if (item.id === 1) {
-                // Медный всадник (Петр) - выше
-                blockPositionClass = styles.catalogItemTop
-              } else if (item.id === 3) {
-                // Памятник Суворову - выше колонны
-                blockPositionClass = styles.catalogItemMiddle
-              } else {
-                // Колонна (id: 2) и Барклай (id: 4) - стандартное позиционирование
-                blockPositionClass = styles.catalogItemBottom
-              }
+              visibleItems.map((item, index) => {
+                const photoUrl = item.photos && item.photos.length > 0 ? item.photos[0] : null
+                const blockPositionClass =
+                  index === 0 ? styles.catalogItemMiddle
+                    : index === 1 ? ''
+                      : index === 2 ? styles.catalogItemMiddle
+                        : ''
 
-              return (
-                <div
-                  key={item.id}
-                  className={`${styles.catalogItem} ${blockPositionClass} ${
-                    index === currentItemIndex ? styles.catalogItemActive : ''
-                  }`}
-                  onClick={() => handleItemClick(item)}
-                >
-                <div className={styles.catalogItemImage}>
-                  {monumentImages[item.name] ? (
-                    <img 
-                      src={monumentImages[item.name]} 
-                      alt={item.name}
-                      onError={(e) => {
-                        e.target.style.display = 'none'
-                      }}
-                    />
-                  ) : item.photos && item.photos.length > 0 ? (
-                    <img 
-                      src={item.photos[0]} 
-                      alt={item.name}
-                      onError={(e) => {
-                        e.target.style.display = 'none'
-                      }}
-                    />
-                  ) : null}
-                </div>
-                <div className={styles.catalogItemOverlay}>
-                  <h3 
-                    className={styles.catalogItemTitle}
-                    dangerouslySetInnerHTML={{ __html: item?.title || '' }}
-                  />
-                </div>
-              </div>
-              )
-            })
+                return (
+                  <div
+                    key={item.id}
+                    className={`${styles.catalogItem} ${blockPositionClass}`}
+                    onClick={() => handleItemClick(item)}
+                  >
+                    <div className={styles.catalogItemImage}>
+                      {photoUrl ? (
+                        <img
+                          src={photoUrl}
+                          alt={item.name}
+                          onError={(e) => {
+                            e.target.style.display = 'none'
+                          }}
+                        />
+                      ) : null}
+                    </div>
+                    <div className={styles.catalogItemOverlay}>
+                      <h3
+                        className={styles.catalogItemTitle}
+                        dangerouslySetInnerHTML={{ __html: item?.title || '' }}
+                      />
+                    </div>
+                  </div>
+                )
+              })
             )}
           </div>
 
-          {/* Стрелочки для переключения между предметами - по середине страницы */}
+          {/* Стрелки: переключение между страницами по 4 предмета */}
           <div className={styles.catalogControls}>
-            <button 
+            <button
               className={styles.catalogArrow}
-              onClick={handlePrevItem}
-              disabled={filteredItems.length === 0 || currentItemIndex === 0}
-              aria-label="Предыдущий предмет"
+              onClick={handlePrevPage}
+              disabled={filteredItems.length === 0 || pageIndex === 0}
+              aria-label="Предыдущая страница"
             >
-              <ArrowBackIosNewIcon/>
+              <ArrowBackIosNewIcon />
             </button>
             <button
               className={styles.catalogArrow}
-              onClick={handleNextItem}
-              disabled={filteredItems.length === 0 || currentItemIndex === filteredItems.length - 1}
-              aria-label="Следующий предмет"
+              onClick={handleNextPage}
+              disabled={filteredItems.length === 0 || pageIndex >= totalPages - 1}
+              aria-label="Следующая страница"
             >
-              <ArrowForwardIosIcon/>
+              <ArrowForwardIosIcon />
             </button>
           </div>
         </div>
 
         {/* Кнопка "Назад" внизу слева */}
         <div className={styles.catalogBottomNavigation}>
-          <button 
+          <button
             className={styles.catalogBackBtn}
             onClick={handleBack}
           >

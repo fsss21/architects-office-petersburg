@@ -34,7 +34,7 @@
 }
 
 .photoGalleryImage {
-  
+  height: 600px;
   object-fit: cover;
   cursor: pointer;
   transition: transform 0.3s ease, opacity 0.3s ease;

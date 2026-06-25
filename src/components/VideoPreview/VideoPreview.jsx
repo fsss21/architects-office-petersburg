@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import styles from './VideoPreview.module.css'
-import mainPageImg from '../../assets/main_page_img.jpg'
-import mainPageImg4k from '../../assets/main_page_img-4k.jpg'
+import mainPageImg from '../../assets/main_page_img.png'
+import mainPageImg4k from '../../assets/main_page_img-4k.png'
 
 function VideoPreview({ onComplete }) {
   const [showPreview, setShowPreview] = useState(true)

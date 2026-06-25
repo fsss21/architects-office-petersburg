@@ -203,6 +203,7 @@ function Header() {
                 disabled={!prevItem}
                 aria-label="Предыдущий предмет"
               >
+                <ArrowBackIosNewIcon fontSize='large' />
 
               </button>
               <button
@@ -212,7 +213,7 @@ function Header() {
                 disabled={!nextItem}
                 aria-label="Следующий предмет"
               >
-
+                <ArrowForwardIosIcon fontSize='large' />
               </button>
             </div>
             <button
@@ -221,7 +222,7 @@ function Header() {
               onClick={handleHeaderCloseItem}
               aria-label="Закрыть, вернуться в каталог"
             >
-
+              <CloseIcon fontSize='large' />
             </button>
           </div>
         )}

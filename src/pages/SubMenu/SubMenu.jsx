@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import ProgressLine from '../../components/ProgressLine/ProgressLine'
 import PhotoGallery from '../../components/PhotoGallery/PhotoGallery'
 import Header from '../../components/Header/Header'
@@ -15,6 +15,7 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen'
 
 function SubMenu() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [selectedPoint, setSelectedPoint] = useState(0)
   const [progressPoints, setProgressPoints] = useState([])
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0)
@@ -37,6 +38,15 @@ function SubMenu() {
       })
       .then(data => {
         setProgressPoints(data)
+
+        const selectedId = location.state?.selectedId
+        if (selectedId != null) {
+          const index = data.findIndex((point) => point.id === selectedId)
+          if (index >= 0) {
+            setSelectedPoint(index)
+          }
+        }
+
         setCurrentPhotoIndex(0) // Сбрасываем индекс при загрузке
       })
       .catch(err => console.error('Error loading progress points:', err))

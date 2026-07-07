@@ -50,7 +50,8 @@ function MainMenu() {
   }
 
   const handleDetails = () => {
-    navigate('/submenu')
+    const selectedId = texts[currentTextIndex]?.id
+    navigate('/submenu', { state: { selectedId } })
   }
 
   const handleCatalog = () => {

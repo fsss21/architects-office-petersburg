@@ -185,6 +185,7 @@
   max-width: 1050px;
   margin-right: 20px;
   min-width: 0;
+  overflow: hidden;
 }
 
 .catalogItemGallery {
@@ -194,6 +195,9 @@
   border-radius: 8px;
   padding: 30px;
   min-height: 500px;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 /* Увеличиваем размер фото на странице предмета */
@@ -206,7 +210,17 @@
   width: 100% !important;
   min-height: 450px !important;
   max-height: 550px !important;
+  height: 550px !important;
   aspect-ratio: auto !important;
+  overflow: hidden !important;
+}
+
+.catalogItemGallery img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
 }
 
 /* Навигация фото */
@@ -360,6 +374,7 @@
   .catalogItemGallery > div > div {
     min-height: 620px !important;
     max-height: 820px !important;
+    height: 820px !important;
   }
 }
 
@@ -428,5 +443,6 @@
   .catalogItemGallery > div > div {
     min-height: 920px !important;
     max-height: 1180px !important;
+    height: 1180px !important;
   }
 }

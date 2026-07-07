@@ -66,7 +66,7 @@
 
 .subMenuMainContentMenu {
   display: flex;
-  max-width: 700px;
+  width: 700px;
   padding: 20px;
 }
 
@@ -199,20 +199,35 @@
   justify-content: center;
   align-items: center;
   max-width: 900px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .subMenuGalleryWrapper {
   width: 100%;
   max-width: 800px;
+  min-width: 0;
 }
 
 .subMenuGalleryWrapper :global(div[class*="photoGallery"]) {
+  width: 100%;
   max-width: 800px;
 }
 
 .subMenuGalleryWrapper :global(div[class*="photoGalleryContainer"]) {
+  width: 100%;
   min-height: 400px;
   max-height: 500px;
+  height: 500px;
+  aspect-ratio: auto;
+}
+
+.subMenuGalleryWrapper :global(img[class*="photoGalleryImage"]) {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .subMenuGalleryControls{
@@ -410,6 +425,8 @@
   .subMenuGalleryWrapper :global(div[class*="photoGalleryContainer"]) {
     min-height: 520px;
     max-height: 700px;
+    height: 700px;
+    aspect-ratio: auto;
   }
 
   .subMenuGalleryControls {
@@ -498,6 +515,8 @@
   .subMenuGalleryWrapper :global(div[class*="photoGalleryContainer"]) {
     min-height: 780px;
     max-height: 980px;
+    height: 980px;
+    aspect-ratio: auto;
   }
 
   .subMenuGalleryControls {
